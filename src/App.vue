@@ -7,7 +7,7 @@
 
 <script>
 // import ApolloExample from "./components/ApolloExample.vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import HelloWorld from "./components/Todos.vue";
 
 export default {
   name: "App",
