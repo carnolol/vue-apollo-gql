@@ -5,6 +5,16 @@ import {
   restartWebsockets
 } from "vue-cli-plugin-apollo/graphql-client";
 
+// create local cache storage!
+import { InMemoryCache } from "apollo-cache-inmemory";
+const cache = new InMemoryCache();
+
+console.log("CASH$$$?", cache);
+// todo: destructure?
+
+import typeDefs from "./components/Photos.vue";
+
+console.log("TYPE DEFS", typeDefs);
 // Install the vue plugin
 Vue.use(VueApollo);
 
@@ -13,7 +23,7 @@ const AUTH_TOKEN = "apollo-token";
 
 // Http endpoint
 const httpEndpoint =
-  process.env.VUE_APP_GRAPHQL_HTTP || "https://graphqlzero.almansi.me/api";
+  process.env.VUE_APP_GRAPHQL_HTTP || "http://localhost:4000/graphql";
 // Files URL root
 export const filesRoot =
   process.env.VUE_APP_FILES_ROOT ||
@@ -27,7 +37,7 @@ const defaultOptions = {
   httpEndpoint,
   // You can use `wss` for secure connection (recommended in production)
   // Use `null` to disable subscriptions
-  wsEndpoint: null,
+  wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || "ws://localhost:4000/graphql",
   // LocalStorage token
   tokenName: AUTH_TOKEN,
   // Enable Automatic Query persisting with Apollo Engine
@@ -56,15 +66,35 @@ const defaultOptions = {
   // clientState: { resolvers: { ... }, defaults: { ... } }
 };
 
+// !!! Apollo client here
 // Call this in the Vue app file
 export function createProvider(options = {}) {
   // Create apollo client
   const { apolloClient, wsClient } = createApolloClient({
+    cache,
+    typeDefs,
+    resolvers: {},
     ...defaultOptions,
     ...options
   });
+
   apolloClient.wsClient = wsClient;
 
+  cache.writeData({
+    data: {
+      Photos: [
+        {
+          __typename: "Photo",
+          id: 1,
+          url:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScMcEcJ_dFxBV5FYQZ4EABpj64jgkWxJNzOw&usqp=CAU",
+          name: "space kitty"
+        }
+      ]
+    }
+  });
+
+  console.log("CACHE NOW!?", cache);
   // Create vue apollo provider
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
