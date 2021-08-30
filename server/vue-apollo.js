@@ -55,13 +55,9 @@ const typeDefs = gql`
     name: String!
   }
 
-  # type Mutation {
-  #   editPhoto(id: Int!, url: String!, name: String!): Photo
-  # }
-
   type Mutation {
-    # editPhoto(id: Int!, url: String!, name: String!): Photo!
-    addPhoto(id: Int!, url: String!, name: String!): Photo
+    editPhoto(id: Int!, url: String!, name: String!): Photo!
+    addPhoto(id: Int!, url: String!, name: String!): Photo!
   }
 `;
 
@@ -115,7 +111,7 @@ const resolvers = {
       try {
         console.log("EDDDIT PHOTO VARS-> ", id, url, name);
         const data = cache.readQuery({ query: PhotosQuery });
-        console.log("DATA", editPhoto);
+        console.log("DATA", data);
         // Find the correct photo Index to delete
         const currentPhotoIndex = data.Photos.findIndex(
           (photo) => photo.id === id
@@ -133,6 +129,7 @@ const resolvers = {
 
         // update our
         cache.writeQuery({ query: editPhoto, data: data });
+        console.log("CASHHH", cache);
       } catch (e) {
         console.log("ERROR WITH EDIT PHOTO", e);
       }
