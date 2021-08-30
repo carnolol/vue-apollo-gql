@@ -19,6 +19,7 @@
 
 <script>
 import gql from "graphql-tag";
+
 import Photo from "./Photo.vue";
 
 export const PhotosQuery = gql`
@@ -70,7 +71,6 @@ export default {
       });
     },
     async deletePhoto(id) {
-      console.log("VUE DELETE PHOTO", id);
       this.$apollo.mutate({
         mutation: deletePhoto,
         variables: { id }

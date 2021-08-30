@@ -60,7 +60,7 @@ const typeDefs = gql`
   # }
 
   type Mutation {
-    editPhoto(url: String!, name: String!): Photo
+    # editPhoto(id: Int!, url: String!, name: String!): Photo!
     addPhoto(id: Int!, url: String!, name: String!): Photo
   }
 `;
@@ -112,7 +112,6 @@ const resolvers = {
     },
     //* Edit Photo
     editPhoto: (_, { id, url, name }, { cache }) => {
-      console.log("HELLO WORLD");
       try {
         console.log("EDDDIT PHOTO VARS-> ", id, url, name);
         const data = cache.readQuery({ query: PhotosQuery });
@@ -130,7 +129,7 @@ const resolvers = {
           __typename: "Photo"
         };
         console.log("UPDATED PHOTO", updatedPhoto);
-        // data.Photos.splice(currentPhotoIndex, 1, updatedPhoto);
+        data.Photos.splice(currentPhotoIndex, 1, updatedPhoto);
 
         // update our
         cache.writeQuery({ query: editPhoto, data: data });

@@ -1,7 +1,7 @@
 <template>
   <div class="photo">
     <h3>{{ photo.name }}</h3>
-    <!-- <button @click="toggleEdit">EDIT</button> -->
+    <button @click="toggleEdit">EDIT</button>
     <img :src="photo.url" :alt="photo.name" />
     <button @click="deletePhoto(photo.id)">Delete</button>
     <div v-if="editMode">
@@ -18,8 +18,14 @@ import gql from "graphql-tag";
 
 // our store mutation
 export const editPhoto = gql`
-  mutation($url: String!, $name: String!) {
-    editPhoto(url: $url, name: $name) @client
+  mutation($id: Int!, $url: String!, $name: String!) {
+    editPhoto(id: $id, url: $url, name: $name) @client {
+      Photo {
+        id
+        url
+        name
+      }
+    }
   }
 `;
 
@@ -40,13 +46,17 @@ export default {
   methods: {
     toggleEdit() {
       this.editMode = !this.editMode;
+      if (this.editMode === false) {
+        this.newName = "";
+        this.newUrl = "";
+      }
     },
     async editPhoto(id, url, name) {
       try {
         console.log("editphoto Data VUE", id, url, name);
         this.$apollo.mutate({
           mutation: editPhoto,
-          variabes: { id, url, name }
+          variables: { id, url, name }
         });
         // close the editing inputs
         this.toggleEdit();
