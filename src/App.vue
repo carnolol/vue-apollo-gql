@@ -1,20 +1,15 @@
 <template>
   <div id="app">
-    <!-- <ApolloExample msg="Welcome to Your Vue.js App" /> -->
-    <ApolloExample />
     <Photos />
   </div>
 </template>
 
 <script>
-import ApolloExample from "./components/ApolloExample.vue";
 import Photos from "./components/Photos.vue";
-// import ApolloExample from "./components/Todos.vue";
 
 export default {
   name: "App",
   components: {
-    ApolloExample,
     Photos
   }
 };

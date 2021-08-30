@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import { createProvider } from "./vue-apollo";
+import { createProvider } from "../server/vue-apollo";
 // import { ApolloClient } from "apollo-client";
 
 // const apolloClient = new ApolloClient({

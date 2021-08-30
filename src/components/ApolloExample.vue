@@ -8,7 +8,7 @@
         placeholder="Type a name"
         class="input"
         id="field-name"
-      >
+      />
     </div>
 
     <!-- Apollo watched Graphql query -->
@@ -32,9 +32,7 @@
     </ApolloQuery>
 
     <!-- Tchat example -->
-    <ApolloQuery
-      :query="require('../graphql/Messages.gql')"
-    >
+    <ApolloQuery :query="require('../graphql/Messages.gql')">
       <ApolloSubscribeToMore
         :document="require('../graphql/MessageAdded.gql')"
         :update-query="onMessageAdded"
@@ -57,8 +55,8 @@
       :mutation="require('../graphql/AddMessage.gql')"
       :variables="{
         input: {
-          text: newMessage,
-        },
+          text: newMessage
+        }
       }"
       class="form"
       @done="newMessage = ''"
@@ -71,18 +69,14 @@
             v-model="newMessage"
             placeholder="Type a message"
             class="input"
-          >
+          />
         </form>
       </template>
     </ApolloMutation>
 
     <div class="images">
-      <div
-        v-for="file of files"
-        :key="file.id"
-        class="image-item"
-      >
-        <img :src="`${$filesRoot}/${file.path}`" class="image"/>
+      <div v-for="file of files" :key="file.id" class="image-item">
+        <img :src="`${$filesRoot}/${file.path}`" class="image" />
       </div>
     </div>
 
@@ -94,59 +88,59 @@
         accept="image/*"
         required
         @change="onUploadImage"
-      >
+      />
     </div>
   </div>
 </template>
 
 <script>
-import FILES from '../graphql/Files.gql'
-import UPLOAD_FILE from '../graphql/UploadFile.gql'
+import FILES from "../graphql/Files.gql";
+import UPLOAD_FILE from "../graphql/UploadFile.gql";
 
 export default {
-  data () {
+  data() {
     return {
-      name: 'Anne',
-      newMessage: '',
-    }
+      name: "Anne",
+      newMessage: ""
+    };
   },
 
   apollo: {
-    files: FILES,
+    files: FILES
   },
 
   computed: {
-    formValid () {
-      return this.newMessage
-    },
+    formValid() {
+      return this.newMessage;
+    }
   },
 
   methods: {
-    onMessageAdded (previousResult, { subscriptionData }) {
+    onMessageAdded(previousResult, { subscriptionData }) {
       return {
         messages: [
           ...previousResult.messages,
-          subscriptionData.data.messageAdded,
-        ],
-      }
+          subscriptionData.data.messageAdded
+        ]
+      };
     },
 
-    async onUploadImage ({ target }) {
-      if (!target.validity.valid) return
+    async onUploadImage({ target }) {
+      if (!target.validity.valid) return;
       await this.$apollo.mutate({
         mutation: UPLOAD_FILE,
         variables: {
-          file: target.files[0],
+          file: target.files[0]
         },
         update: (store, { data: { singleUpload } }) => {
-          const data = store.readQuery({ query: FILES })
-          data.files.push(singleUpload)
-          store.writeQuery({ query: FILES, data })
-        },
-      })
+          const data = store.readQuery({ query: FILES });
+          data.files.push(singleUpload);
+          store.writeQuery({ query: FILES, data });
+        }
+      });
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>

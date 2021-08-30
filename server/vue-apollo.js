@@ -5,16 +5,15 @@ import {
   restartWebsockets
 } from "vue-cli-plugin-apollo/graphql-client";
 
+import gql from "graphql-tag";
 // create local cache storage!
 import { InMemoryCache } from "apollo-cache-inmemory";
 const cache = new InMemoryCache();
 
-console.log("CASH$$$?", cache);
-// todo: destructure?
-
-import typeDefs from "./components/Photos.vue";
-
-console.log("TYPE DEFS", typeDefs);
+// imports from PHOTOS.VUE
+import { PhotosQuery, addPhotox } from "../src/components/Photos.vue";
+//import from PHOTO.VUE
+import { editPhoto } from "../src/components/Photo.vue";
 // Install the vue plugin
 Vue.use(VueApollo);
 
@@ -47,33 +46,108 @@ const defaultOptions = {
   websocketsOnly: false,
   // Is being rendered on the server?
   ssr: false
-
-  // Override default apollo link
-  // note: don't override httpLink here, specify httpLink options in the
-  // httpLinkOptions property of defaultOptions.
-  // link: myLink
-
-  // Override default cache
-  // cache: myCache
-
-  // Override the way the Authorization header is set
-  // getAuth: (tokenName) => ...
-
-  // Additional ApolloClient options
-  // apollo: { ... }
-
-  // Client local data (see apollo-link-state)
-  // clientState: { resolvers: { ... }, defaults: { ... } }
 };
 
-// !!! Apollo client here
+const typeDefs = gql`
+  type Photo {
+    id: Int!
+    url: String!
+    name: String!
+  }
+
+  # type Mutation {
+  #   editPhoto(id: Int!, url: String!, name: String!): Photo
+  # }
+
+  type Mutation {
+    editPhoto(url: String!, name: String!): Photo
+    addPhoto(id: Int!, url: String!, name: String!): Photo
+  }
+`;
+
+// !!! RESOLVER HERE
+const resolvers = {
+  Mutation: {
+    addPhoto: (_, { id, url, name }, { cache }) => {
+      try {
+        // get our photo data
+        const data = cache.readQuery({ query: PhotosQuery });
+        // create new photo object
+        const newPhoto = {
+          id,
+          url,
+          name,
+          __typename: "Photo"
+        };
+        // push new photo object to cache
+        data.Photos.push(newPhoto);
+        // write to the cash with the new data
+        cache.writeQuery({ query: addPhotox, data: data });
+        // success!
+        return true;
+      } catch (e) {
+        // stupid errors :(
+        console.log("BIG ERROR", e);
+      }
+    },
+    // * Delete Photo
+    deletePhoto: (_, { id }, { cache }) => {
+      try {
+        console.log("INSIDE DELETE PHOTO ID", id);
+        // get our Photo data
+        const data = cache.readQuery({ query: PhotosQuery });
+        console.log("DATA", data);
+        // Find the correct photo Index to delete
+        const currentPhotoIndex = data.Photos.findIndex(
+          (photo) => photo.id === id
+        );
+        console.log("Current Photo Index", currentPhotoIndex);
+        // remove dat bad boi
+        data.Photos.splice(currentPhotoIndex, 1);
+        // update cache
+        cache.writeQuery({ query: PhotosQuery, data });
+      } catch (e) {
+        console.log("Delete Photo Error ->", e);
+      }
+    },
+    //* Edit Photo
+    editPhoto: (_, { id, url, name }, { cache }) => {
+      console.log("HELLO WORLD");
+      try {
+        console.log("EDDDIT PHOTO VARS-> ", id, url, name);
+        const data = cache.readQuery({ query: PhotosQuery });
+        console.log("DATA", editPhoto);
+        // Find the correct photo Index to delete
+        const currentPhotoIndex = data.Photos.findIndex(
+          (photo) => photo.id === id
+        );
+        //! this is returning -1 because were passing in undefined.
+        console.log("current photo!?", currentPhotoIndex);
+        const updatedPhoto = {
+          id,
+          url,
+          name,
+          __typename: "Photo"
+        };
+        console.log("UPDATED PHOTO", updatedPhoto);
+        // data.Photos.splice(currentPhotoIndex, 1, updatedPhoto);
+
+        // update our
+        cache.writeQuery({ query: editPhoto, data: data });
+      } catch (e) {
+        console.log("ERROR WITH EDIT PHOTO", e);
+      }
+    }
+  }
+};
+
 // Call this in the Vue app file
 export function createProvider(options = {}) {
   // Create apollo client
   const { apolloClient, wsClient } = createApolloClient({
     cache,
     typeDefs,
-    resolvers: {},
+    resolvers,
     ...defaultOptions,
     ...options
   });
@@ -94,7 +168,6 @@ export function createProvider(options = {}) {
     }
   });
 
-  console.log("CACHE NOW!?", cache);
   // Create vue apollo provider
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
