@@ -3,6 +3,14 @@ module.exports = {
     apollo: {
       enableMocks: false,
       enableEngine: false
+    },
+    quasar: {
+      importStrategy: 'kebab',
+      rtlSupport: false
     }
-  }
+  },
+
+  transpileDependencies: [
+    'quasar'
+  ]
 }
