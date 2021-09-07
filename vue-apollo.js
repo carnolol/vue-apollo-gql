@@ -89,15 +89,12 @@ const resolvers = {
     // * Delete Photo
     deletePhoto: (_, { id }, { cache }) => {
       try {
-        console.log("INSIDE DELETE PHOTO ID", id);
         // get our Photo data
         const data = cache.readQuery({ query: PhotosQuery });
-        console.log("DATA", data);
         // Find the correct photo Index to delete
         const currentPhotoIndex = data.Photos.findIndex(
           (photo) => photo.id === id
         );
-        console.log("Current Photo Index", currentPhotoIndex);
         // remove dat bad boi
         data.Photos.splice(currentPhotoIndex, 1);
         // update cache
@@ -109,27 +106,23 @@ const resolvers = {
     //* Edit Photo
     editPhoto: (_, { id, url, name }, { cache }) => {
       try {
-        console.log("EDDDIT PHOTO VARS-> ", id, url, name);
         const data = cache.readQuery({ query: PhotosQuery });
-        console.log("DATA", data);
         // Find the correct photo Index to delete
         const currentPhotoIndex = data.Photos.findIndex(
           (photo) => photo.id === id
         );
-        //! this is returning -1 because were passing in undefined.
-        console.log("current photo!?", currentPhotoIndex);
+
         const updatedPhoto = {
           id,
           url,
           name,
           __typename: "Photo"
         };
-        console.log("UPDATED PHOTO", updatedPhoto);
+
         data.Photos.splice(currentPhotoIndex, 1, updatedPhoto);
 
-        // update our
+        // update our cache
         cache.writeQuery({ query: editPhoto, data: data });
-        console.log("CASHHH", cache);
       } catch (e) {
         console.log("ERROR WITH EDIT PHOTO", e);
       }

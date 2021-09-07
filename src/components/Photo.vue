@@ -5,6 +5,7 @@
     <img :src="photo.url" :alt="photo.name" />
     <button @click="deletePhoto(photo.id)">Delete</button>
     <div v-if="editMode">
+      <button @click="toggleEdit">X</button>
       <input placeholder="New Name" type="text" v-model="newName" />
       <input placeholder="New URL" type="text" v-model="newUrl" />
       <button @click="editPhoto(photo.id, newUrl, newName)">Submit</button>

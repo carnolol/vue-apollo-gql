@@ -1,4 +1,0 @@
-fragment Photo on Photo {
-  id
-  text
-}

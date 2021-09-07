@@ -1,16 +1,10 @@
 import Vue from "vue";
 import App from "./App.vue";
-import { createProvider } from "../server/vue-apollo";
-// import { ApolloClient } from "apollo-client";
-
-// const apolloClient = new ApolloClient({
-//   typeDefs,
-//   resolvers: {}
-// });
+// import { createProvider } from "../server/index";
 
 Vue.config.productionTip = false;
 
 new Vue({
-  apolloProvider: createProvider(),
+  // apolloProvider: createProvider(),
   render: (h) => h(App)
 }).$mount("#app");
