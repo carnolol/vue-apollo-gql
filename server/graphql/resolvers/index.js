@@ -1,68 +1,50 @@
-// const { InMemoryCache } = require("apollo-cache-inmemory");
-// const cache = new InMemoryCache();
+const allPhotos = [
+  {
+    id: 123,
+    name: "Space Kitty MEOW",
+    url:
+      "https://i.pinimg.com/originals/41/a3/b1/41a3b1aaa8bb905bc2d35c3dff44d919.jpg"
+  }
+];
 
-// !!! RESOLVER HERE
 const resolvers = {
+  Query: {
+    getPhotos: (_, {}, { context }) => {
+      return allPhotos;
+    }
+  },
   Mutation: {
-    addPhoto: (_, { id, url, name }, { cache }) => {
+    addPhoto: (_, { id, url, name }, { context }) => {
       try {
-        // get our photo data
-        const data = cache.readQuery({ query: PhotosQuery });
         // create new photo object
         const newPhoto = {
           id,
           url,
-          name,
-          __typename: "Photo"
+          name
         };
-        // push new photo object to cache
-        data.Photos.push(newPhoto);
-        // write to the cash with the new data
-        cache.writeQuery({ query: addPhotox, data: data });
-        // success!
-        return true;
+
+        return newPhoto;
       } catch (e) {
         // stupid errors :(
-        console.log("BIG ERROR", e);
+        console.log("Add photo Error -> ", e);
       }
     },
-    // * Delete Photo
-    deletePhoto: (_, { id }, { cache }) => {
+    deletePhoto: (_, { id }, { context }) => {
       try {
-        // get our Photo data
-        const data = cache.readQuery({ query: PhotosQuery });
-        // Find the correct photo Index to delete
-        const currentPhotoIndex = data.Photos.findIndex(
-          (photo) => photo.id === id
-        );
-        // remove dat bad boi
-        data.Photos.splice(currentPhotoIndex, 1);
-        // update cache
-        cache.writeQuery({ query: PhotosQuery, data });
+        return true;
       } catch (e) {
         console.log("Delete Photo Error ->", e);
       }
     },
-    //* Edit Photo
-    editPhoto: (_, { id, url, name }, { cache }) => {
+    editPhoto: (_, { id, url, name }, { context }) => {
       try {
-        const data = cache.readQuery({ query: PhotosQuery });
-        // Find the correct photo Index to delete
-        const currentPhotoIndex = data.Photos.findIndex(
-          (photo) => photo.id === id
-        );
-
         const updatedPhoto = {
           id,
           url,
-          name,
-          __typename: "Photo"
+          name
         };
 
-        data.Photos.splice(currentPhotoIndex, 1, updatedPhoto);
-
-        // update our cache
-        cache.writeQuery({ query: editPhoto, data: data });
+        return updatedPhoto;
       } catch (e) {
         console.log("ERROR WITH EDIT PHOTO", e);
       }

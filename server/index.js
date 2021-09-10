@@ -11,7 +11,6 @@ const app = express();
 
 // Install additional functionality as we see fit
 app.use(cors());
-
 // Unfortunately, ApolloGraphQL uploads are BROKEN so we have to substitute another library (see https://github.com/MichalLytek/type-graphql/issues/37#issuecomment-592467594 but not the 3rd snippet of his solution)
 app.use(graphqlUploadExpress({ maxFileSize: 1000000000, maxFiles: 10 }));
 
@@ -41,11 +40,13 @@ const apolloServer = new ApolloServer({
   context: async ({ req }) => {
     if (req) {
       // Create a custom context object available in resolvers
-      const ctx = {
-        models
-      };
+      // todo: bring back in once we have models if we want to go that far?
+      // const ctx = {
+      //   models
+      // };
 
-      return ctx;
+      // return ctx;
+      return req;
     }
   }
 });
@@ -59,5 +60,5 @@ const httpServer = require("http").createServer(app);
 const port = 9001;
 
 httpServer.listen({ port }, () => {
-  console.log(`SEVER DOCKED ON PORT ${port}`);
+  console.log(`SERVER DOCKED ON PORT ${port}`);
 });

@@ -36,6 +36,7 @@
     "eslint-plugin-graphql": "^2.1.1",
     "eslint-plugin-vue": "^6.2.2",
     "graphql-tag": "^2.9.0",
+    "sass-loader": "^12.1.0",
     "vue-cli-plugin-apollo": "~0.22.2",
     "vue-template-compiler": "^2.6.11"
   },

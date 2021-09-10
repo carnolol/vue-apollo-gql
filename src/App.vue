@@ -1,15 +1,18 @@
 <template>
   <div id="app">
+    <Header />
     <Photos />
   </div>
 </template>
 
 <script>
+import Header from "./components/Header.vue";
 import Photos from "./components/Photos.vue";
 
 export default {
   name: "App",
   components: {
+    Header,
     Photos
   }
 };

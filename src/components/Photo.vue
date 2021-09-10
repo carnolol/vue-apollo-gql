@@ -14,28 +14,11 @@
 </template>
 
 <script>
-// import gql
-import gql from "graphql-tag";
-
-// our store mutation
-export const editPhoto = gql`
-  mutation($id: Int!, $url: String!, $name: String!) {
-    editPhoto(id: $id, url: $url, name: $name) @client {
-      Photo {
-        id
-        url
-        name
-      }
-    }
-  }
-`;
-
 // start of Vue stuff
 export default {
   name: "Photo",
   props: {
-    photo: {},
-    deletePhoto: { type: Function }
+    photo: {}
   },
   data() {
     return {
@@ -52,15 +35,21 @@ export default {
         this.newUrl = "";
       }
     },
+
+    async deletePhoto(id) {
+      const response = await this.$store.Photos.deletePhoto(id);
+      console.log("delete photo response", response);
+      return response;
+    },
     async editPhoto(id, url, name) {
       try {
         console.log("editphoto Data VUE", id, url, name);
-        this.$apollo.mutate({
-          mutation: editPhoto,
-          variables: { id, url, name }
-        });
-        // close the editing inputs
+        const updatedPhoto = await this.$store.Photos.editPhoto(id, url, name);
+        console.log("updatedPhoto :>> ", updatedPhoto);
+
         this.toggleEdit();
+        return updatedPhoto;
+        // close the editing inputs
       } catch (e) {
         // alert some errors if we get them
         alert(e);

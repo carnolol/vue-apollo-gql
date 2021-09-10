@@ -1,0 +1,7 @@
+query getPhotos {
+  getPhotos {
+    id
+    url
+    name
+  }
+}

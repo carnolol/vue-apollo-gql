@@ -1,0 +1,5 @@
+fragment PhotoAttributes on Photo {
+  id
+  url
+  name
+}

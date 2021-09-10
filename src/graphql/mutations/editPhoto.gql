@@ -1,0 +1,7 @@
+mutation editPhoto($id: Int!, $url: String!, $name: String!) {
+  editPhoto(id: $id, url: $url, name: $name) {
+    id
+    url
+    name
+  }
+}
