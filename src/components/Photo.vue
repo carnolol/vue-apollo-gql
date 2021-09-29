@@ -8,7 +8,11 @@
       <button @click="toggleEdit">X</button>
       <input placeholder="New Name" type="text" v-model="newName" />
       <input placeholder="New URL" type="text" v-model="newUrl" />
-      <button @click="editPhoto(photo.id, newUrl, newName)">Submit</button>
+      <button
+        @click="editPhoto(photo.id, photo.url, photo.name, newUrl, newName)"
+      >
+        Submit
+      </button>
     </div>
   </div>
 </template>
@@ -38,14 +42,17 @@ export default {
 
     async deletePhoto(id) {
       const response = await this.$store.Photos.deletePhoto(id);
-      console.log("delete photo response", response);
       return response;
     },
-    async editPhoto(id, url, name) {
+    async editPhoto(id, oldUrl, oldName, newUrl, newName) {
       try {
-        console.log("editphoto Data VUE", id, url, name);
-        const updatedPhoto = await this.$store.Photos.editPhoto(id, url, name);
-        console.log("updatedPhoto :>> ", updatedPhoto);
+        const theUrl = newUrl ? newUrl : oldUrl;
+        const theName = newName ? newName : oldName;
+        const updatedPhoto = await this.$store.Photos.editPhoto(
+          id,
+          theUrl,
+          theName
+        );
 
         this.toggleEdit();
         return updatedPhoto;

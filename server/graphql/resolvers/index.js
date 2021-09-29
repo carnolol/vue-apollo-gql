@@ -4,6 +4,12 @@ const allPhotos = [
     name: "Space Kitty MEOW",
     url:
       "https://i.pinimg.com/originals/41/a3/b1/41a3b1aaa8bb905bc2d35c3dff44d919.jpg"
+  },
+  {
+    id: 333,
+    name: "RACE & MIKE",
+    url:
+      "https://i.pinimg.com/originals/41/a3/b1/41a3b1aaa8bb905bc2d35c3dff44d919.jpg"
   }
 ];
 

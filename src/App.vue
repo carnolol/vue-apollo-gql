@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Header />
+    <!-- does this work? -->
     <Photos />
   </div>
 </template>
